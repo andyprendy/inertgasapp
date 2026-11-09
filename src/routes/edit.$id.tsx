@@ -8,7 +8,7 @@ import { getAssessment } from "@/lib/store";
 export const Route = createFileRoute("/edit/$id")({
   head: () => ({
     meta: [
-      { title: "Edit assessment — Inert Gas Safety" },
+      { title: "Edit assessment — Inert Gas App" },
       { name: "description", content: "Edit an inert gas safety assessment." },
       { property: "og:title", content: "Edit inert gas assessment" },
       { property: "og:description", content: "Edit an inert gas safety assessment." },

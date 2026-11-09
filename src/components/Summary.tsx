@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Section } from "@/components/AppShell";
-import { UNIT_LABEL, containerO2, dilutionRatio, formatDate, roomVolume, steadyO2, type Assessment } from "@/lib/assessment";
+import { UNIT_LABEL, formatDate, roomVolume, type Assessment } from "@/lib/assessment";
 
 export function summaryRows(a: Assessment): [string, [string, string][]][] {
   const u = UNIT_LABEL[a.units];
@@ -25,12 +25,6 @@ export function summaryRows(a: Assessment): [string, [string, string][]][] {
       ["Single point of failure", a.spof.enabled ? `Yes · ${a.spof.gas || "—"} · ${val(a.spof.flow, u.gas)}` : "No"],
       ...(a.spof.enabled ? ([["Threaded fittings", yn(a.spof.threaded)], ["Ventilation in space", yn(a.spof.ventilation)], ["Sound < 85 dBA", yn(a.spof.quiet)]] as [string, string][]) : []),
     ]],
-    ["Indicative estimates", [
-      ["O₂ after container release", f(containerO2(a), "%")],
-      ["Steady O₂ – normal release", a.normal.enabled ? f(steadyO2(a, a.normal.flow), "%") : "—"],
-      ["Steady O₂ – SPOF release", a.spof.enabled ? f(steadyO2(a, a.spof.flow), "%") : "—"],
-      ["Dilution ratio (normal)", (() => { const d = dilutionRatio(a); return d === null ? "—" : `${Math.round(d)}:1`; })()],
-    ]],
   ];
 }
 
@@ -44,7 +38,6 @@ export function Summary({ a }: { a: Assessment }) {
           </dl>
         </Section>
       ))}
-      <p className="mb-5 text-xs text-muted-foreground">Estimates assume perfect mixing adjusted by the K-factor; they support, not replace, a quantitative ODA.</p>
     </>
   );
 }

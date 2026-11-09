@@ -1,6 +1,6 @@
 {
-  "name": "Inert Gas Safety Assessments",
-  "short_name": "Gas Safety",
+  "name": "Inert Gas App",
+  "short_name": "Inert Gas App",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f7f5f0",

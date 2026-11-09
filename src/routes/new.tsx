@@ -8,7 +8,7 @@ import { getLastAssessor } from "@/lib/store";
 export const Route = createFileRoute("/new")({
   head: () => ({
     meta: [
-      { title: "New assessment — Inert Gas Safety" },
+      { title: "New assessment — Inert Gas App" },
       { name: "description", content: "Log a new inert gas safety assessment." },
       { property: "og:title", content: "New inert gas assessment" },
       { property: "og:description", content: "Log a new inert gas safety assessment." },
