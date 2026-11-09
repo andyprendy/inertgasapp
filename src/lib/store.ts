@@ -1,5 +1,5 @@
 import { get, set, del, keys, getMany } from "idb-keyval";
-import type { Assessment } from "./assessment";
+import { normalize, type Assessment } from "./assessment";
 
 const PREFIX = "assessment:";
 
@@ -7,14 +7,15 @@ export async function saveAssessment(a: Assessment) {
   await set(PREFIX + a.id, a);
 }
 export async function getAssessment(id: string) {
-  return (await get<Assessment>(PREFIX + id)) ?? null;
+  const x = await get<Assessment>(PREFIX + id);
+  return x ? normalize(x) : null;
 }
 export async function deleteAssessment(id: string) {
   await del(PREFIX + id);
 }
 export async function listAssessments(): Promise<Assessment[]> {
   const k = (await keys()).filter((x) => String(x).startsWith(PREFIX));
-  const all = (await getMany<Assessment | undefined>(k)).filter((x): x is Assessment => !!x);
+  const all = (await getMany<Assessment | undefined>(k)).filter((x): x is Assessment => !!x).map(normalize);
   return all.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 export function getLastAssessor() {
