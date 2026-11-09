@@ -41,10 +41,10 @@ export function AssessmentForm({ initial }: { initial: Assessment }) {
 
   function next() {
     if (step === 0) {
-      if (!a.assessor.trim()) return toast.error("Add the assessor's name");
-      if (!a.building.trim() && !a.room.trim()) return toast.error("Add the building or room");
+      if (!a.assessor.trim()) { toast.error("Add the assessor's name"); return; }
+      if (!a.building.trim() && !a.room.trim()) { toast.error("Add the building or room"); return; }
     }
-    if (step === 5 && !a.scenario) return toast.error("Choose the condition that applies");
+    if (step === 5 && !a.scenario) { toast.error("Choose the condition that applies"); return; }
     go(step + 1);
   }
 
