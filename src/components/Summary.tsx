@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Section } from "@/components/AppShell";
 import { UNIT_LABEL, containerO2, dilutionRatio, formatDate, roomVolume, steadyO2, type Assessment } from "@/lib/assessment";
 
@@ -39,7 +40,7 @@ export function Summary({ a }: { a: Assessment }) {
       {summaryRows(a).map(([title, rows]) => (
         <Section key={title} title={title}>
           <dl className="grid grid-cols-[9rem_1fr] gap-y-1.5 text-[15px]">
-            {rows.map(([k, v]) => <><dt key={k + "k"} className="text-muted-foreground">{k}</dt><dd key={k + "v"} className="font-medium">{v}</dd></>)}
+            {rows.map(([k, v]) => <Fragment key={k}><dt className="text-muted-foreground">{k}</dt><dd className="font-medium">{v}</dd></Fragment>)}
           </dl>
         </Section>
       ))}

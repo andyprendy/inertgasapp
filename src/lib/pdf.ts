@@ -1,5 +1,7 @@
-import type { Assessment } from "./assessment";
-import { CHECKLIST, OUTCOME_LABEL, findIssues, o2Status } from "./assessment";
+import { formatDate, scenario, type Assessment } from "./assessment";
+import { summaryRows } from "@/components/Summary";
+
+const clean = (t: string) => t.replace(/₂/g, "2").replace(/³/g, "3").replace(/×/g, "x").replace(/[–≤≥]/g, (c) => (c === "–" ? "-" : c === "≤" ? "<=" : ">="));
 
 export async function buildPdf(a: Assessment): Promise<Blob> {
   const { jsPDF } = await import("jspdf");
@@ -31,60 +33,30 @@ export async function buildPdf(a: Assessment): Promise<Blob> {
   doc.setFillColor(43, 51, 64); doc.rect(0, 0, W, 28, "F");
   doc.setFillColor(245, 170, 30); doc.rect(0, 28, W, 2, "F");
   doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(18);
-  doc.text("Inert Gas Safety Assessment", M, 15);
+  doc.text("Inert Gas Hazard Evaluation", M, 15);
   doc.setFontSize(10); doc.setFont("helvetica", "normal");
-  doc.text(new Date(a.createdAt).toLocaleString("en-GB"), M, 22);
+  doc.text(`${formatDate(a.date)}  ·  ${[a.building, a.room].filter(Boolean).join(" / ")}  ·  ${a.assessor}`, M, 22);
   y = 38; doc.setTextColor(30, 30, 30); doc.setFontSize(10);
 
-  heading("Details");
-  row("Assessor", a.assessor); row("Site", a.site); row("Area / location", a.area);
-  row("Gas type", a.gasType); row("Activity", a.activity);
-
-  const outcome = a.outcome ? OUTCOME_LABEL[a.outcome] : "Not recorded";
-  heading("Outcome");
+  const sc = scenario(a.scenario);
+  heading("Risk category");
   ensure(10);
-  const col: [number, number, number] = a.outcome === "safe" ? [46, 140, 80] : a.outcome === "stop" ? [200, 50, 40] : [245, 170, 30];
+  const col: [number, number, number] = !sc ? [120, 120, 120] : sc.category === "D" ? [46, 140, 80] : sc.category === "C" ? [245, 170, 30] : [200, 50, 40];
   doc.setFillColor(...col); doc.roundedRect(M, y - 5, CW, 9, 1.5, 1.5, "F");
-  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.text(outcome, M + 3, y + 1);
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold");
+  doc.text(sc ? clean(sc.controlsTitle) : "Not screened", M + 3, y + 1);
   doc.setTextColor(30, 30, 30); doc.setFont("helvetica", "normal"); y += 9;
-  const issues = findIssues(a);
-  if (issues.length) {
-    doc.setTextColor(200, 50, 40); doc.setFont("helvetica", "bold"); para(`Flagged issues (${issues.length}):`);
-    doc.setFont("helvetica", "normal"); issues.forEach((i) => para("• " + i.replace(/₂/g, "2")));
-    doc.setTextColor(30, 30, 30);
+  if (sc) {
+    row("Condition", clean(sc.title));
+    row("ODA required", clean(sc.odaNote));
+    doc.setFont("helvetica", "bold"); para("Mandatory controls:"); doc.setFont("helvetica", "normal");
+    sc.controls.forEach((c) => para("- " + clean(c)));
   }
-
-  heading("Atmosphere readings (safe O2: 19.5–23.5%)");
-  doc.setFont("helvetica", "bold");
-  const cols: [number, number, number, number] = [M, M + 20, M + 95, M + 125];
-  ["Time", "Location", "O2 %", `${a.gasType} / other`].forEach((h, i) => doc.text(h, cols[i as 0], y));
-  y += 6; doc.setFont("helvetica", "normal");
-  for (const r of a.readings) {
-    ensure(6);
-    const s = o2Status(r.o2);
-    doc.text(r.time || "—", cols[0], y);
-    doc.text(doc.splitTextToSize(r.location || "—", 72)[0], cols[1], y);
-    if (s === "low" || s === "high") doc.setTextColor(200, 50, 40);
-    doc.text(r.o2 ? `${r.o2}${s === "low" ? " LOW" : s === "high" ? " HIGH" : ""}` : "—", cols[2], y);
-    doc.setTextColor(30, 30, 30);
-    doc.text(r.gasPpm || "—", cols[3], y);
-    y += 6;
+  for (const [title, rows] of summaryRows(a)) {
+    heading(clean(title));
+    rows.forEach(([k, v]) => row(clean(k), clean(v)));
   }
-
-  heading("Hazard checklist");
-  for (const c of CHECKLIST) {
-    const v = a.checklist[c.id];
-    ensure(6);
-    doc.text(c.label.replace("O₂", "O2"), M, y);
-    const label = v === "yes" ? "YES" : v === "no" ? "NO" : v === "na" ? "N/A" : "—";
-    if (v === "no") doc.setTextColor(200, 50, 40);
-    doc.setFont("helvetica", "bold"); doc.text(label, M + CW, y, { align: "right" });
-    doc.setFont("helvetica", "normal"); doc.setTextColor(30, 30, 30);
-    y += 6;
-  }
-
-  heading("Controls & notes");
-  para(a.controls);
+  if (a.notes) { heading("Notes"); para(a.notes); }
 
   if (a.photos.length) {
     heading("Photos");
@@ -126,7 +98,7 @@ export async function deliverFile(blob: Blob, filename: string) {
 }
 
 export function pdfName(a: Assessment) {
-  const d = a.createdAt.slice(0, 10);
-  const site = (a.site || "assessment").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+  const d = a.date;
+  const site = (a.room || a.building || "assessment").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
   return `inert-gas-${site}-${d}.pdf`;
 }
