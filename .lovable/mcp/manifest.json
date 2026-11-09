@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "sdk_version": "3.4.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "inert-gas-app",
+      "version": "0.1.0",
+      "title": "Inert Gas App"
+    },
+    "tools": [
+      {
+        "name": "list_risk_categories",
+        "title": "List risk categories",
+        "description": "List the inert gas screening scenarios with their risk category (A–D), whether an ODA is required, and required controls.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "estimate_oxygen",
+        "title": "Estimate oxygen levels",
+        "description": "Estimate room volume, oxygen % after a cryogen container release or a continuous gas release, and a suggested screening scenario. Indicative only; the assessor makes the final call.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "units": {
+              "type": "string",
+              "enum": [
+                "metric",
+                "imperial"
+              ],
+              "description": "metric: m, m³/hr, LPM. imperial: ft, cfm, CFM."
+            },
+            "length": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Room length."
+            },
+            "width": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Room width."
+            },
+            "height": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Room height."
+            },
+            "roomFlow": {
+              "description": "Room HVAC supply flow (m³/hr or cfm). Omit if no HVAC.",
+              "type": "number",
+              "minimum": 0
+            },
+            "kFactor": {
+              "description": "Mixing K-factor 1–8 (default 3).",
+              "type": "number",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "normalFlow": {
+              "description": "Normal-operation gas release flow (LPM or CFM).",
+              "type": "number",
+              "minimum": 0
+            },
+            "cryogen": {
+              "description": "Cryogen in the container.",
+              "type": "string",
+              "enum": [
+                "Liquid nitrogen",
+                "Liquid argon",
+                "Liquid helium",
+                "Liquid CO₂"
+              ]
+            },
+            "containerLitres": {
+              "description": "Liquid volume of the container in litres.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "spofFlow": {
+              "description": "Single-point-of-failure release flow (LPM or CFM).",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "units",
+            "length",
+            "width",
+            "height"
+          ],
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

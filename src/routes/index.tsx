@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { CategoryBadge } from "@/components/OutcomeBadge";
 import { formatDate, scenario, type Assessment } from "@/lib/assessment";
 import { listAssessments } from "@/lib/store";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,6 +28,29 @@ function Index() {
   const filtered = (items ?? []).filter((a) =>
     [a.building, a.room, a.assessor].join(" ").toLowerCase().includes(q.toLowerCase()),
   );
+
+  useWebMCP({
+    name: "list_assessments",
+    description: "List the assessments currently shown on this device, respecting the search box.",
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    enabled: items !== null,
+    execute: () => runWebMCPTool("list_assessments", () =>
+      filtered.length === 0 ? "No assessments shown." : filtered.map((a) => {
+        const sc = scenario(a.scenario);
+        return `${a.id}: ${a.room || a.building || "Untitled"} (${a.building || "—"}) · ${formatDate(a.date)} · ${a.assessor} · Category ${sc?.category ?? "?"}${sc?.oda ? " · ODA required" : ""}`;
+      }).join("\n")),
+  });
+
+  useWebMCP({
+    name: "search_assessments",
+    description: "Filter the shown assessments by building, room or assessor text (empty string clears).",
+    inputSchema: { type: "object", properties: { query: { type: "string", description: "Search text." } }, required: ["query"] },
+    execute: ({ query }: { query: string }) => runWebMCPTool("search_assessments", () => {
+      if (typeof query !== "string") throw new Error("query must be a string.");
+      setQ(query);
+      return "Search updated.";
+    }),
+  });
 
   return (
     <AppShell title="Inert Gas App">
