@@ -11,7 +11,7 @@ describe("space calculations", () => {
 });
 
 describe("oxygen estimates", () => {
-  it("50 L LN2 into 150 m³ gives ~16.4% O2", () => {
+  it("50 L LN2 into 150 m³ gives ~17.0% O2", () => {
     const a = room(); a.container = { enabled: true, cryogen: "Liquid nitrogen", litres: "50" };
     expect(containerO2(a)!).toBeCloseTo(16.98, 1);
   });
