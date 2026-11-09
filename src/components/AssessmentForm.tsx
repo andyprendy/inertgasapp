@@ -179,6 +179,23 @@ export function AssessmentForm({ initial }: { initial: Assessment }) {
         <>
           <h2 className="mb-3 font-display text-2xl font-bold uppercase">Data summary review</h2>
           <Summary a={a} />
+          <Section title="Photos" hint="Optional – upload or take photos of the space">
+            <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={(e) => { void addPhotos(e.target.files); e.target.value = ""; }} />
+            <div className="grid grid-cols-2 gap-3">
+              {a.photos.map((p) => (
+                <div key={p.id} className="overflow-hidden rounded-md border">
+                  <div className="relative">
+                    <img src={p.dataUrl} alt={p.caption || "Assessment photo"} className="aspect-square w-full object-cover" />
+                    <button type="button" aria-label="Remove photo" onClick={() => set("photos", a.photos.filter((x) => x.id !== p.id))} className="absolute right-1 top-1 rounded-full bg-secondary p-1.5 text-secondary-foreground"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                  <input value={p.caption} onChange={(e) => set("photos", a.photos.map((x) => (x.id === p.id ? { ...x, caption: e.target.value } : x)))} placeholder="Caption" className="w-full border-t bg-card px-2 py-1.5 text-sm outline-none" />
+                </div>
+              ))}
+              <button type="button" onClick={() => fileRef.current?.click()} className="flex aspect-square flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed text-muted-foreground hover:bg-muted">
+                <Camera className="h-7 w-7" /><span className="text-sm font-medium">Add photo</span>
+              </button>
+            </div>
+          </Section>
         </>
       )}
 
@@ -213,23 +230,6 @@ export function AssessmentForm({ initial }: { initial: Assessment }) {
           </Section>
           <Section title="Notes" hint="Optional">
             <Textarea value={a.notes} onChange={(e) => set("notes", e.target.value)} rows={3} placeholder="Comments, actions required…" />
-          </Section>
-          <Section title="Photos" hint="Optional">
-            <input ref={fileRef} type="file" accept="image/*" capture="environment" multiple hidden onChange={(e) => { void addPhotos(e.target.files); e.target.value = ""; }} />
-            <div className="grid grid-cols-2 gap-3">
-              {a.photos.map((p) => (
-                <div key={p.id} className="overflow-hidden rounded-md border">
-                  <div className="relative">
-                    <img src={p.dataUrl} alt={p.caption || "Assessment photo"} className="aspect-square w-full object-cover" />
-                    <button type="button" aria-label="Remove photo" onClick={() => set("photos", a.photos.filter((x) => x.id !== p.id))} className="absolute right-1 top-1 rounded-full bg-secondary p-1.5 text-secondary-foreground"><Trash2 className="h-4 w-4" /></button>
-                  </div>
-                  <input value={p.caption} onChange={(e) => set("photos", a.photos.map((x) => (x.id === p.id ? { ...x, caption: e.target.value } : x)))} placeholder="Caption" className="w-full border-t bg-card px-2 py-1.5 text-sm outline-none" />
-                </div>
-              ))}
-              <button type="button" onClick={() => fileRef.current?.click()} className="flex aspect-square flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed text-muted-foreground hover:bg-muted">
-                <Camera className="h-7 w-7" /><span className="text-sm font-medium">Add photo</span>
-              </button>
-            </div>
           </Section>
         </>
       )}

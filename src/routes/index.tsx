@@ -10,9 +10,9 @@ import { listAssessments } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Assessments — Inert Gas Safety" },
+      { title: "Assessments — Inert Gas App" },
       { name: "description", content: "Your logged inert gas safety assessments, stored on this device." },
-      { property: "og:title", content: "Inert Gas Safety Assessments" },
+      { property: "og:title", content: "Inert Inert Gas App" },
       { property: "og:description", content: "Log inert gas safety assessments in the field, even offline." },
     ],
   }),
@@ -28,7 +28,7 @@ function Index() {
   );
 
   return (
-    <AppShell title="Gas Safety Assessments">
+    <AppShell title="Inert Gas App">
       {items && items.length > 0 && (
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

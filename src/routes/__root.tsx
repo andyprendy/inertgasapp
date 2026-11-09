@@ -83,10 +83,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Inert Gas Safety Assessments" },
+      { title: "Inert Inert Gas App" },
       { name: "description", content: "Log inert gas safety assessments in the field, even offline." },
       { name: "theme-color", content: "#2b3340" },
-      { property: "og:title", content: "Inert Gas Safety Assessments" },
+      { property: "og:title", content: "Inert Inert Gas App" },
       { property: "og:description", content: "Log inert gas safety assessments in the field, even offline." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/a/$id")({
   head: () => ({
     meta: [
-      { title: "Space assessment — Inert Gas Safety" },
+      { title: "Space assessment — Inert Gas App" },
       { name: "description", content: "View and save an inert gas hazard evaluation as PDF." },
       { property: "og:title", content: "Inert gas space assessment" },
       { property: "og:description", content: "View and save an inert gas hazard evaluation as PDF." },
