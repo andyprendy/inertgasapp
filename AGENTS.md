@@ -31,5 +31,5 @@ use the editor.
 
 ## Project rules
 - Assessments are stored only on-device in IndexedDB (src/lib/store.ts); no login or backend, because field users need it to work offline with no accounts.
-- Assessment rules (O₂ limits, checklist, issue flagging) live in src/lib/assessment.ts with tests beside it; UI and PDF must read from there so they stay consistent.
+- Assessment rules (unit conversions, volume, O₂ estimates, screening scenarios → risk category, ODA and controls) live in src/lib/assessment.ts with tests beside it; UI and PDF must read from there so they stay consistent.
 - Offline uses vite-plugin-pwa generateSW, registered only via src/lib/pwa.ts guards so previews never get a service worker.
