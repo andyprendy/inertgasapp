@@ -50,7 +50,7 @@ export async function buildPdf(a: Assessment): Promise<Blob> {
   const issues = findIssues(a);
   if (issues.length) {
     doc.setTextColor(200, 50, 40); doc.setFont("helvetica", "bold"); para(`Flagged issues (${issues.length}):`);
-    doc.setFont("helvetica", "normal"); issues.forEach((i) => para("• " + i));
+    doc.setFont("helvetica", "normal"); issues.forEach((i) => para("• " + i.replace(/₂/g, "2")));
     doc.setTextColor(30, 30, 30);
   }
 
