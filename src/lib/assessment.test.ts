@@ -10,8 +10,8 @@ describe("O2 thresholds", () => {
   it("flags above 23.5% as high", () => expect(o2Status("23.6")).toBe("high"));
   it("lists failed checks and bad readings as issues", () => {
     const a = newAssessment();
-    a.readings[0].o2 = "18";
-    a.checklist.ventilation = "no";
+    a.readings[0]!.o2 = "18";
+    a.checklist["ventilation"] = "no";
     expect(findIssues(a)).toHaveLength(2);
   });
 });

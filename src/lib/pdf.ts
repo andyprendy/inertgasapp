@@ -56,8 +56,8 @@ export async function buildPdf(a: Assessment): Promise<Blob> {
 
   heading("Atmosphere readings (safe O2: 19.5–23.5%)");
   doc.setFont("helvetica", "bold");
-  const cols = [M, M + 20, M + 95, M + 125];
-  ["Time", "Location", "O2 %", `${a.gasType} / other`].forEach((h, i) => doc.text(h, cols[i], y));
+  const cols: [number, number, number, number] = [M, M + 20, M + 95, M + 125];
+  ["Time", "Location", "O2 %", `${a.gasType} / other`].forEach((h, i) => doc.text(h, cols[i as 0], y));
   y += 6; doc.setFont("helvetica", "normal");
   for (const r of a.readings) {
     ensure(6);

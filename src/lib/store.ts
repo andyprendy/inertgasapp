@@ -14,7 +14,7 @@ export async function deleteAssessment(id: string) {
 }
 export async function listAssessments(): Promise<Assessment[]> {
   const k = (await keys()).filter((x) => String(x).startsWith(PREFIX));
-  const all = (await getMany<Assessment>(k)).filter(Boolean);
+  const all = (await getMany<Assessment | undefined>(k)).filter((x): x is Assessment => !!x);
   return all.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 export function getLastAssessor() {

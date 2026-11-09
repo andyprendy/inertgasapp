@@ -26,7 +26,7 @@ export function AssessmentForm({ initial }: { initial: Assessment }) {
 
   async function addPhotos(files: FileList | null) {
     if (!files) return;
-    const added = [];
+    const added: { id: string; dataUrl: string; caption: string }[] = [];
     for (const f of Array.from(files)) {
       try { added.push({ id: uid(), dataUrl: await compressImage(f), caption: "" }); }
       catch { toast.error(`Couldn't read ${f.name}`); }
@@ -35,9 +35,9 @@ export function AssessmentForm({ initial }: { initial: Assessment }) {
   }
 
   async function save() {
-    if (!a.site.trim()) return toast.error("Add the site name");
-    if (!a.assessor.trim()) return toast.error("Add the assessor's name");
-    if (!a.outcome) return toast.error("Choose an outcome");
+    if (!a.site.trim()) { toast.error("Add the site name"); return; };
+    if (!a.assessor.trim()) { toast.error("Add the assessor's name"); return; };
+    if (!a.outcome) { toast.error("Choose an outcome"); return; };
     setSaving(true);
     try {
       await saveAssessment(a);
