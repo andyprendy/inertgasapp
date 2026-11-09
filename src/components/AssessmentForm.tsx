@@ -185,7 +185,7 @@ export function AssessmentForm({ initial }: { initial: Assessment }) {
       {step === 5 && (
         <Section title="Qualitative screening" hint="Choose the condition that best describes this space.">
           {suggested && (
-            <p className="mb-3 flex items-start gap-2 rounded-md bg-accent p-3 text-sm"><Lightbulb className="mt-0.5 h-4 w-4 shrink-0" />Based on your inputs, the indicative estimate points to <strong>{scenario(suggested)!.title}</strong>. Confirm or choose another.</p>
+            <p className="mb-3 flex items-start gap-2 rounded-md bg-accent p-3 text-sm"><Lightbulb className="mt-0.5 h-4 w-4 shrink-0" /><span>Based on your inputs, the indicative estimate points to <strong>{scenario(suggested)!.title}</strong>. Confirm or choose another.</span></p>
           )}
           <div className="grid gap-2">
             {SCENARIOS.map((s) => (
