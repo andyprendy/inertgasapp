@@ -65,7 +65,7 @@ function Index() {
           })}
         </ul>
       )}
-      <Link to="/new" className="fixed bottom-5 left-1/2 z-20 flex h-14 -translate-x-1/2 items-center gap-2 rounded-full bg-primary px-6 font-display text-lg font-bold uppercase text-primary-foreground shadow-lg ring-4 ring-background">
+      <Link to="/new" className="fixed bottom-5 left-1/2 z-20 flex h-14 -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-primary px-6 font-display text-lg font-bold uppercase text-primary-foreground shadow-lg ring-4 ring-background">
         <Plus className="h-5 w-5" />New assessment
       </Link>
     </AppShell>
