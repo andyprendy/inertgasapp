@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Assessments — Inert Gas App" },
       { name: "description", content: "Your logged inert gas safety assessments, stored on this device." },
-      { property: "og:title", content: "Inert Inert Gas App" },
+      { property: "og:title", content: "Inert Gas App" },
       { property: "og:description", content: "Log inert gas safety assessments in the field, even offline." },
     ],
   }),
